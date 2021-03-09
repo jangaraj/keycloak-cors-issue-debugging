@@ -33,11 +33,11 @@ These recommendations are based on real experience. I'm sure there can be also a
    [Preflight request](https://developer.mozilla.org/en-US/docs/Glossary/Preflight_request) (`OPTIONS` method) is saying to Keycloak "what" is requested by the app and then Keycloak returns "what" is allowed actually. Simple `curl` debugging on Linux of preflight request - app is developed on `http://192.168.0.133:8080`, so that's used as an origin:
    ```
    $ curl -X OPTIONS \
-   >  -H "Origin: http://192.168.0.133:8080" \
-   >  -H "Access-Control-Request-Method: POST" \
-   >  -H "Access-Control-Request-Headers: authorization,x-requested-with" \
-   >  -k https://<keycloak-host>/auth/realms/<realm>/protocol/openid-connect/token \
-   >  --silent --verbose 2>&1 | grep Access-Control
+     -H "Origin: http://192.168.0.133:8080" \
+     -H "Access-Control-Request-Method: POST" \
+     -H "Access-Control-Request-Headers: authorization,x-requested-with" \
+     -k https://<keycloak-host>/auth/realms/<realm>/protocol/openid-connect/token \
+     --silent --verbose 2>&1 | grep Access-Control
    > Access-Control-Request-Method: POST
    > Access-Control-Request-Headers: authorization,x-requested-with
    < Access-Control-Allow-Headers: Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Authorization
