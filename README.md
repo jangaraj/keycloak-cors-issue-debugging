@@ -54,11 +54,18 @@ These recommendations are based on real experience. I'm sure there can be also a
 
    So for SPA it is `Authorization Code Flow with Proof Key for Code Exchange (PKCE)` usually (so used OIDC client must be public). I can imagine also `Client Credentials Flow` or `Direct Access Grant Flow` can be used. `Implicit Flow` is [deprecated flow](https://developer.okta.com/blog/2019/05/01/is-the-oauth-implicit-flow-dead), so don't use it anymore.
    I would recommend to read https://developer.okta.com/docs/concepts/oauth-openid/#what-kind-of-client-are-you-building
+   
+   CORS issue to auth endpoint e.g. `https://<keycloak-host>/auth/realms/<realm>/protocol/openid-connect/auth` indicates wrong backend/API implementation or used flow. XHR request shouldn't never reach auth Keycloak endpoint (that is designated only for full user browser access and not XHR access)
   
 6. Use certified OIDC library
 
    Unless, you are using simple flows - but mature library may make your life easy also in their case.
    See: https://openid.net/developers/certified/ OIDC is a standard SSO standard. You really don't need to use any library with `keycloak` in the name. But used library must support OIDC SSO protocol. Actually, I would avoid any `keycloak` libraries completely. It may introduces vendor dependency and you will need to change the code in the future, when you will decide to change used Identity provider. Humble recommendation for Angular: https://github.com/damienbod/angular-auth-oidc-client
+
+# Example implementations
+
+- React: https://github.com/dasniko/keycloak-reactjs-demo
+- Angular: https://github.com/damienbod/angular-auth-oidc-client/tree/main/projects
 
 # Recommended doc
 
