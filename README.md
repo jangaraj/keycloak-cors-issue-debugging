@@ -73,4 +73,117 @@ These recommendations are based on real experience. I'm sure there can be also a
 
 # Please don't contact me
 
-These recommendations may help you. If not please don't contact me with the request for the help (unless you demand commercial paid support). Unfortunately, I don't have a capacity for that. Use another resources, e.g. https://keycloak.discourse.group/ and always mention how did you configure client and how did you debug the issue (preflight request can be very usefull to see what is requested and what is returned by Keycloak). Requests `I have CORS issue, so what to do` are useless. Provides details and then you will increase your chance that someone gives you some clue.
+These recommendations may help you. If not please don't contact me with the request for the help (unless you demand commercial paid support). Unfortunately, I don't have a capacity for that. Use another resources, e.g. https://keycloak.discourse.group/ and always mention how did you configure client and how did you debug the issue (preflight request can be very usefull to see what is requested and what is returned by Keycloak). Requests `I have CORS issue, so what to do` are useless. Provides details and then you will increase your chance that someone gives you some clue. Example of correct report:
+
+1.) I use Keycloak 12.0.3 and OIC client with this configuration (exported json model):
+
+```
+{
+    "clientId": "vue",
+    "description": "My test OIDC client for my Vue SPA app",
+    "surrogateAuthRequired": false,
+    "enabled": true,
+    "alwaysDisplayInConsole": false,
+    "clientAuthenticatorType": "client-secret",
+    "redirectUris": [
+        "https://192.168.11.133/*"
+    ],
+    "webOrigins": [
+        "https://192.168.11.133/*"
+    ],
+    "notBefore": 0,
+    "bearerOnly": false,
+    "consentRequired": false,
+    "standardFlowEnabled": true,
+    "implicitFlowEnabled": false,
+    "directAccessGrantsEnabled": true,
+    "serviceAccountsEnabled": false,
+    "publicClient": false,
+    "frontchannelLogout": false,
+    "protocol": "openid-connect",
+    "attributes": {
+        "saml.assertion.signature": "false",
+        "saml.multivalued.roles": "false",
+        "saml.force.post.binding": "false",
+        "saml.encrypt": "false",
+        "backchannel.logout.revoke.offline.tokens": "false",
+        "saml.server.signature": "false",
+        "saml.server.signature.keyinfo.ext": "false",
+        "exclude.session.state.from.auth.response": "false",
+        "backchannel.logout.session.required": "true",
+        "client_credentials.use_refresh_token": "false",
+        "saml_force_name_id_format": "false",
+        "saml.client.signature": "false",
+        "tls.client.certificate.bound.access.tokens": "false",
+        "saml.authnstatement": "false",
+        "display.on.consent.screen": "false",
+        "saml.onetimeuse.condition": "false"
+    },
+    "authenticationFlowBindingOverrides": {},
+    "fullScopeAllowed": true,
+    "nodeReRegistrationTimeout": -1,
+    "defaultClientScopes": [
+        "web-origins",
+        "role_list",
+        "profile",
+        "roles",
+        "email"
+    ],
+    "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+    ],
+    "access": {
+        "view": true,
+        "configure": true,
+        "manage": true
+    }
+}
+```
+
+2.) Snippet of my authentication Vue code - I use `keycloak-js` library version 9.0.0:
+
+```
+// keycloak init options
+const initOptions = {
+  url: process.env.VUE_APP_KEYCLOAK_OPTIONS_URL,
+  realm: process.env.VUE_APP_KEYCLOAK_OPTIONS_REALM,
+  clientId: process.env.VUE_APP_KEYCLOAK_OPTIONS_CLIENTID,
+  onLoad: process.env.VUE_APP_KEYCLOAK_OPTIONS_ONLOAD,
+}
+
+const keycloak = Keycloak(initOptions)
+
+keycloak.init(
+  { onLoad: initOptions.onLoad, promiseType: 'native', checkLoginIframe: false }
+).then(async authenticated => {
+  if (!authenticated) {
+    window.location.reload()
+    return
+  } else {
+    Vue.prototype.$keycloak = keycloak
+    await store.dispatch('user/keycloakLogin', keycloak.token)
+  }
+
+  setInterval(() => {
+    keycloak.updateToken(70).then((refreshed) => {
+      if (refreshed) {
+        console.log('Token refreshed')
+        setToken(keycloak.token)
+      }
+    }).catch(error => {
+      store.commit("snackbar/setSnack", {message:'Your access token was not refreshed automatically. Try full page reload in your browser. Error: ' + error, show: true});
+      console.log('Failed to refresh token', error)
+    })
+  }, 60000)
+```
+
+Env variables:
+```
+VUE_APP_KEYCLOAK_OPTIONS_URL='https://192.169.11.133:8080/auth'
+VUE_APP_KEYCLOAK_OPTIONS_REALM='master'
+VUE_APP_KEYCLOAK_OPTIONS_CLIENTID='vue'
+VUE_APP_KEYCLOAK_OPTIONS_ONLOAD='login-required'
+```
