@@ -189,6 +189,7 @@ VUE_APP_KEYCLOAK_OPTIONS_ONLOAD='login-required'
 ```
 
 3.) Recorded requests of the app with the Keycloak with recoded CORS issue (preflight request included) is available in the har file.
+
 <attach har file - see [how to generate har file](https://www.inflectra.com/support/knowledgebase/kb254.aspx)>
 
 You can use this report as an exercise and find obvious problem(s), which violate recommendations above.
