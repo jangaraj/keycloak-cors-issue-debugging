@@ -73,9 +73,9 @@ These recommendations are based on real experience. I'm sure there can be also a
 
 # Please don't contact me
 
-These recommendations may help you. If not please don't contact me with the request for the help (unless you demand commercial paid support). Unfortunately, I don't have a capacity for that. Use another resources, e.g. https://keycloak.discourse.group/ and always mention how did you configure client and how did you debug the issue (preflight request can be very usefull to see what is requested and what is returned by Keycloak). Requests `I have CORS issue, so what to do` are useless. Provides details and then you will increase your chance that someone gives you some clue. Example of right problem report (it's clear which Keycloak version is used, how is OIDC client configured, how auth code looks like, what is the CORS issue):
+These recommendations may help you. If not please don't contact me with the request for the help (unless you demand commercial paid support). Unfortunately, I don't have a capacity for that. Use another resources, e.g. https://keycloak.discourse.group/ and always mention how did you configure client and how did you debug the issue (preflight request can be very usefull to see what is requested and what is returned by Keycloak). Requests `I have CORS issue, so what to do` are useless. Provides details and then you will increase your chance that someone gives you some clue. Example of usefull problem report (it's clear which Keycloak version is used, how is OIDC client configured, how SPA auth code looks like, which library is used, what is the CORS issue):
 
-1.) I use Keycloak 12.0.3 and OIC client with this configuration (exported json model):
+1.) I use Keycloak 12.0.3 and OIDC client with this configuration (exported json model):
 
 ```
 {
@@ -146,14 +146,12 @@ These recommendations may help you. If not please don't contact me with the requ
 2.) Snippet of my authentication Vue code - I use `keycloak-js` library version 9.0.0:
 
 ```
-// keycloak init options
 const initOptions = {
   url: process.env.VUE_APP_KEYCLOAK_OPTIONS_URL,
   realm: process.env.VUE_APP_KEYCLOAK_OPTIONS_REALM,
   clientId: process.env.VUE_APP_KEYCLOAK_OPTIONS_CLIENTID,
   onLoad: process.env.VUE_APP_KEYCLOAK_OPTIONS_ONLOAD,
 }
-
 const keycloak = Keycloak(initOptions)
 
 keycloak.init(
