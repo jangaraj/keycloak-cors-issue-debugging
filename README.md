@@ -176,6 +176,10 @@ keycloak.init(
       console.log('Failed to refresh token', error)
     })
   }, 60000)
+      
+}).catch(error => {
+  console.log('Authentication failed: ', error)
+})
 ```
 
 Env variables:
