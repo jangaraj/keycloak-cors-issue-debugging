@@ -24,7 +24,7 @@ These recommendations are based on real experience. I'm sure there can be also a
   
    > In requests with credentials, it is treated as the literal header name "*" without special semantics. Note that the Authorization header can't be wildcarded and always needs to be listed explicitly.
  
-3. Full Scope Allowed can't be enabled
+3. Full Scope must be disabled
 
    Make sure `Full Scope Allowed` is not `ON` in the Keycloak client `Scope Mapping` configuration
  
