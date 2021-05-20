@@ -53,15 +53,19 @@ These recommendations are based on real experience. I'm sure there can be also a
 
    Requested details from pre preflight request e.g. `Origin, Access-Control-Request-Method, Access-Control-Request-Headers` 
    must be included in the preflight response e.g. `Access-Control-Allow-Origin, Access-Control-Request-Method, Access-Control-Request-Headers`. If they are not or they are not matching, then browser will denies to execute request. This is example of preflight request for token endpoint, but each Keycloak URL may have own preflight request, which should be inspected.
+   
+6. Check Keycloak response body
+
+   Keycloak response body may contains a clue. For example `Client secret not provided in request`, when private OIDC client was used in the PKCE authentication instead of public client.
   
-6. Use correct OIDC flow
+7. Use correct OIDC flow
 
    So for SPA it is `Authorization Code Flow with Proof Key for Code Exchange (PKCE)` usually (so used OIDC client must be public). I can imagine also `Client Credentials Flow` or `Direct Access Grant Flow` can be used. `Implicit Flow` is [deprecated flow](https://developer.okta.com/blog/2019/05/01/is-the-oauth-implicit-flow-dead), so don't use it anymore.
    I would recommend to read https://developer.okta.com/docs/concepts/oauth-openid/#what-kind-of-client-are-you-building
    
    CORS issue to auth endpoint e.g. `https://<keycloak-host>/auth/realms/<realm>/protocol/openid-connect/auth` indicates wrong backend/API implementation or used flow. XHR request shouldn't never reach auth Keycloak endpoint (that is designated only for full user browser access and not XHR access)
   
-7. Use certified OIDC library
+8. Use certified OIDC library
 
    Unless, you are using simple flows - but mature library may make your life easy also in their case.
    See: https://openid.net/developers/certified/ OIDC is a standard SSO standard. You really don't need to use any library with `keycloak` in the name. But used library must support OIDC SSO protocol. Actually, I would avoid any `keycloak` libraries completely. It may introduces vendor dependency and you will need to change the code in the future, when you will decide to change used Identity provider. Humble recommendation for Angular: https://github.com/damienbod/angular-auth-oidc-client
