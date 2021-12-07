@@ -28,9 +28,11 @@ These recommendations are based on real experience. I'm sure there can be also a
 
    Make sure `Full Scope Allowed` is not `ON` in the Keycloak client `Scope Mapping` configuration
  
-4. Don't use `localhost` for the development
+4. Don't use `localhost` and local file system for the development
 
    It is not saying not using local machine, just don't use `localhost` in the browser. Local machine has also local IP of your network, e.g. `192.168.0.133` , so I would use it everywhere (in the browser, in the OIDC client Origin configuration, ....). All SPA dev servers can bind also your local IP (e.g. use binding interace `0.0.0.0`), so they can run also on local IP, not just on `localhost` or `127.0.0.1` interface. You can use local hosts file and develop app on fake local "domain" directly. Problem is that some browser may have very likely own config for `localhost` - https://stackoverflow.com/questions/10883211/deadly-cors-when-http-localhost-is-the-origin
+   
+   Local file system (URL in the browser which refers to your local file system, e.g. `file:///C:/Users/User/Desktop/index.html`) don't provide origin, so they have error `Origin null is not allowed by Access-Control-Allow-Origin.`, which is valid. Keycloak can't allow `null` origin. Use proper webserver, so you have URL with `https` (`http`) protocol.
 
 5. Use browser network console to inspect prefligh request
 
